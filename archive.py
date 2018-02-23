@@ -7,6 +7,9 @@ Arguments are names of directories where the music files are stored.
 Tar file is left in ARTIST/ALBUM/ directory.
 Disk and track numbers are trimmed off -- they should be in the ID3 metadata.
 
+The command-line arguments to this script are one or more "roots", which
+are the directories where the ARTIST directories are stored.
+
 A file /tmp/rmfile is also created, containing the names of song files which
 have been copied to archives.  This may optionally be used to remove the
 song files.

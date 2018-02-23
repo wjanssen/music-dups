@@ -7,6 +7,9 @@ should be in the ID3 tag for the file.  Reports on duplicate songs
 (which may be alternate takes).  The argument or arguments are root
 directories to scan the subtree of.
 
+The command-line arguments to this script are one or more "roots", which
+are the directories where the ARTIST directories are stored.
+
 If multiple roots are specified, will create a bash script in /tmp/movefile
 which attempts to copy everything to the first root specified, but does not
 execute said script.
