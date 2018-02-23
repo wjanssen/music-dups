@@ -30,6 +30,11 @@ found = collections.defaultdict(list)      # map triple of (artist, album, song)
 
 trackno = re.compile(r'^(?P<disk>\(.+?\)\s+)?(?P<track>[0-9]+)?(?P<sep>\s*-\s*[0-9]*)?\s+')
 
+metacharacters = re.compile(r'([|&;\(\)<>\t \'"])')
+
+def quote_metacharacters(s):
+    return metacharacters.sub(r"\\\1", s)
+
 for index, root in enumerate(roots):
     count = 0
     for dirpath, dirs, files in os.walk(root):
@@ -76,16 +81,19 @@ if len(roots) > 1:
     for (artist, album), songs in by_artist_album.items():
         todir = os.path.join(roots[0], artist, album)
         if not os.path.exists(todir):
-            movefile.write('mkdir -p "%s"\n' % (re.sub('"', '\\"', todir),))
+            movefile.write("mkdir -p '%s'\n" % (re.sub('"', "\\'", todir),))
         for songname, locations in songs.items():
             if 0 not in [x[0] for x in locations]:
                 # copy it to root 0
                 songfilepath = locations[0][1]
-                fromfile = re.sub('"', '\\"', songfilepath)
+                fromfile = metacharacters.sub(r"\\\1", songfilepath)
                 songfilename = songname + ".mp3"
-                tofile = re.sub('"', '\\"', os.path.join(todir, songfilename))
-                movefile.write('echo "%s / %s / %s"\n' % (artist, album, songname))
-                movefile.write('cp "%s" "%s"\n' % (fromfile, tofile))
+                tofile = metacharacters.sub(r"\\\1", os.path.join(todir, songfilename))
+                movefile.write('echo %s / %s / %s\n' % (
+                    metacharacters.sub(r"\\\1", artist),
+                    metacharacters.sub(r"\\\1", album),
+                    metacharacters.sub(r"\\\1", songname)))
+                movefile.write('cp %s %s\n' % (fromfile, tofile))
 else:
 
     def clean_filename(location):
